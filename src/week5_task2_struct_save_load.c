@@ -1,8 +1,3 @@
-// week5_task2_struct_save_load.c
-// Task 2: Save and load structured records from a file
-// Week 5 – Files & Modular Programming
-// TODO: Complete function implementations and file handling logic.
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,23 +22,58 @@ int main(void) {
 
     const char *filename = "student.txt";
 
-    // TODO: Call save_student() to save student data to file
-    // TODO: Call load_student() to read data back into a new struct
-    // TODO: Print loaded data to confirm correctness
+    // Call save_student() to save student data to file
+    printf("Saving student to file...\n");
+    save_student(s1, filename);
+
+    // Call load_student() to read data back into a new struct
+    printf("Loading student from file...\n");
+    Student loaded_student = load_student(filename);
+
+    // Print loaded data to confirm correctness
+    printf("Loaded student: %s, %d, GPA: %.2f\n", 
+           loaded_student.name, loaded_student.age, loaded_student.gpa);
 
     return 0;
 }
 
-// TODO: Implement save_student()
-// Open file for writing, check errors, write fields, then close file
+// Implement save_student()
 void save_student(Student s, const char *filename) {
-    // ...
+    FILE *fp = fopen(filename, "w");
+    
+    // Check if file opened successfully
+    if (fp == NULL) {
+        printf("Error opening file for writing!\n");
+        return;
+    }
+    
+    // Write student data to file in format: name age gpa
+    fprintf(fp, "%s %d %.2f\n", s.name, s.age, s.gpa);
+    
+    fclose(fp);
+    printf("Student saved successfully.\n");
 }
 
-// TODO: Implement load_student()
-// Open file for reading, check errors, read fields, then close file
+// Implement load_student()
 Student load_student(const char *filename) {
     Student s;
-    // ...
+    FILE *fp = fopen(filename, "r");
+    
+    // Check if file opened successfully
+    if (fp == NULL) {
+        printf("Error opening file for reading!\n");
+        // Return empty student if file can't be opened
+        strcpy(s.name, "Unknown");
+        s.age = 0;
+        s.gpa = 0.0f;
+        return s;
+    }
+    
+    // Read student data from file
+    fscanf(fp, "%s %d %f", s.name, &s.age, &s.gpa);
+    
+    fclose(fp);
+    printf("Student loaded successfully.\n");
+    
     return s;
 }
